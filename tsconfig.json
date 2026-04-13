@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "NodeNext",
+    "rootDir": "src",
     "target": "ESNext",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,

@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc --project tsconfig.json"
+    "build": "tsc --project tsconfig.json",
+    "exec": "tsc --project tsconfig.json && node dist/index.js"
   },
   "dependencies": {
     "typescript": "^6.0.2"
