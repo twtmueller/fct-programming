@@ -5,6 +5,7 @@ import {
   Inventory,
   ItemState,
   Product,
+  ReceiptByCategory,
   ShoppingCartItem,
 } from './types/types.js';
 
@@ -30,10 +31,26 @@ const augmentCartItemFrom =
       itemPrice: inventory[cartItem.productId].preTaxPriceInCents * currency.rate,
     });
 
+const receiptByCategory = (acc: ReceiptByCategory, item: CartItem) => {
+  addToGroup(acc.cartByCategory, item.category, item);
+  acc.totalPriceInCents += item.qty * item.itemPrice * ( 1 + currency.salesTax )
+  return acc;
+}
+
+const addToGroup = <K, V>(mapToAddTo: Map<K, V[]>, productGroup: K, value: V) => {
+  const valuesForKey: V[] | undefined =
+    (mapToAddTo.has(productGroup))
+      ? mapToAddTo.get(productGroup)
+      : (mapToAddTo.set(productGroup, [] as V[]) && mapToAddTo.get(productGroup));
+
+  valuesForKey!.push(value);
+}
+
 
 export {
   allowInCart,
   augmentCartItemFrom,
+  receiptByCategory,
   reformatInventory,
   toCartPrice,
 }
