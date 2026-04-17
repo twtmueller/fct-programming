@@ -20,9 +20,20 @@ const allowInCart = (cartItem: ShoppingCartItem) => cartItem.status === ItemStat
 const toCartPrice = (acc: number, item: CartItem): number =>
   acc + item.qty * item.itemPrice * ( 1 + currency.salesTax )
 
+const augmentCartItemFrom =
+  (inventory: Inventory) =>
+    (cartItem: ShoppingCartItem): CartItem => ({
+      category: inventory[cartItem.productId].category,
+      productId: cartItem.productId,
+      product: inventory[cartItem.productId].name,
+      qty: cartItem.qty,
+      itemPrice: inventory[cartItem.productId].preTaxPriceInCents * currency.rate,
+    });
+
 
 export {
   allowInCart,
+  augmentCartItemFrom,
   reformatInventory,
   toCartPrice,
 }
