@@ -1,32 +1,33 @@
-import { reformatInventory } from './cart.js';
+import {
+  allowInCart,
+  reformatInventory,
+  toCartPrice,
+} from './cart.js';
 import { ExchangeRates } from './data/exchange-rates.js';
 import { ProductCatalog } from './data/products.js';
 import { ShoppingCart } from './data/shopping-cart.js';
-import { Countries, Inventory, ItemState } from './types/types.js';
+import {
+  CartItem,
+  Countries,
+  Inventory,
+  ShoppingCartItem,
+} from './types/types.js';
 
 const currency = ExchangeRates[Countries.DE];
-let totalPriceInCents: number = 0;
-let fullCart = [];
-
 const inventory: Inventory = ProductCatalog.reduce(reformatInventory, {});
 
-for (let cartItem of ShoppingCart) {
-  if (cartItem.status === ItemState.WISHLIST) continue;
+const augmentCartItem = (cartItem: ShoppingCartItem): CartItem => ({
+  category: inventory[cartItem.productId].category,
+  productId: cartItem.productId,
+  product: inventory[cartItem.productId].name,
+  qty: cartItem.qty,
+  itemPrice: inventory[cartItem.productId].preTaxPriceInCents * currency.rate,
+})
 
-  const fullItem = {
-    productId: cartItem.productId,
-    productName: inventory.name,
-    qty: cartItem.qty,
-    itemPrice: inventory[cartItem.productId].preTaxPriceInCents * currency.rate,
-    category: inventory.category,
-  };
+const totalPriceInCents = ShoppingCart
+  .filter(allowInCart)
+  .map(augmentCartItem)
+  .reduce(toCartPrice, 0)
 
-    fullCart.push(fullItem);
-    totalPriceInCents +=
-      (fullItem.qty * fullItem.itemPrice * (1 + currency.salesTax));
-
-}
-
-console.log('RESULT', fullCart);
 console.log('Total price: €', Math.round(totalPriceInCents) / 100);
 
