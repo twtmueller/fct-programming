@@ -31,11 +31,14 @@ const augmentCartItemFrom =
       itemPrice: inventory[cartItem.productId].preTaxPriceInCents * currency.rate,
     });
 
-const receiptByCategory = (acc: ReceiptByCategory, item: CartItem) => {
-  addToGroup(acc.cartByCategory, item.category, item);
-  acc.totalPriceInCents += item.qty * item.itemPrice * ( 1 + currency.salesTax )
-  return acc;
-}
+const receiptByCategory =
+  (groupingFct: (ci: CartItem) => string) =>
+    (acc: ReceiptByCategory, item: CartItem) => {
+      const cartGroupIndex = groupingFct(item);
+      addToGroup(acc.cartByCategory,cartGroupIndex, item);
+      acc.totalPriceInCents += item.qty * item.itemPrice * ( 1 + currency.salesTax )
+      return acc;
+    }
 
 const addToGroup = <K, V>(mapToAddTo: Map<K, V[]>, productGroup: K, value: V) => {
   const valuesForKey: V[] | undefined =

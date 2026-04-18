@@ -14,13 +14,20 @@ let groupedItems: ReceiptByCategory = {
   cartByCategory: new Map(),
 }
 
+const groupByCategory = (cartItem: CartItem) => cartItem.category;
+const groupByPrice = (cartItem: CartItem) => {
+  if (cartItem.itemPrice > 1000) return 'expensive';
+  else return 'normal'
+}
+
+
 const inventory: Inventory = ProductCatalog.reduce(reformatInventory, {});
 const augmentCartItem = augmentCartItemFrom(inventory);
 
 const groupedCart = ShoppingCart
   .filter(allowInCart)
   .map(augmentCartItem)
-  .reduce(receiptByCategory, groupedItems)
+  .reduce(receiptByCategory(groupByPrice), groupedItems)
 
 console.log('Grouping:', groupedCart.cartByCategory);
 console.log('Total price: €', Math.round(groupedCart.totalPriceInCents) / 100);
