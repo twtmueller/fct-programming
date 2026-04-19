@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc --project tsconfig.json",
-    "exec": "tsc --project tsconfig.json && node dist/index.js"
+    "exec": "tsc --project tsconfig.json && node dist/index.js",
+    "rexec": "tsc --project tsconfig.json && node dist/refactor.js"
+
   },
   "dependencies": {
     "typescript": "^6.0.2"

@@ -1,8 +1,15 @@
+type ProductId = string;
+type Price = number;
+
 type Product = {
-  productId: string,
+  productId: ProductId,
   name: string,
   preTaxPriceInCents: number,
   category: ProductCategory,
+}
+
+type Inventory = {
+  [prodID: ProductId]: Product
 }
 
 enum ProductCategory {
@@ -44,11 +51,29 @@ enum Countries {
   US = 'USA',
 }
 
+type CartItem = {
+  category: ProductCategory,
+  productId: ProductId,
+  product: string,
+  qty: number,
+  itemPrice: Price,
+}
+
+type ReceiptByCategory = {
+  totalPriceInCents: number,
+  cartByCategory: Map<ProductCategory, CartItem[]>,
+}
+
 export {
+  CartItem,
   Countries,
   Financial,
+  Inventory,
   ItemState,
+  Price,
   Product,
   ProductCategory,
+  ProductId,
+  ReceiptByCategory,
   ShoppingCartItem,
-}
+};
